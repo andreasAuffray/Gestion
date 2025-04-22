@@ -1,38 +1,59 @@
 services:
-  db:
-    image: mysql:8
+  tasker-db:
+    image: mariadb:10.11
+    container_name: tasker-db
+    ports:
+      - "3308:3306"
     environment:
+      MYSQL_HOST: ${MYSQL_HOST} # Should be tasker-db
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}
-    volumes:
-      - db_data:/var/lib/mysql
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MARIADB_AUTO_UPGRADE: ${MARIADB_AUTO_UPGRADE}
+      MYSQL_UNIX_PORT: ${MYSQL_PORT}
+      MYSQL_TCP_PORT: ${MYSQL_PORT}
 
-  php:
+  tasker-php:
     depends_on:
-      - db
+      - tasker-db
     environment:
-      DATABASE_URL: mysql://root:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}?charset=utf8&serverVersion=8.0.31
+      MYSQL_HOST: ${MYSQL_HOST} # Should be tasker-db
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_TCP_PORT: ${MYSQL_PORT}
+      MYSQL_UNIX_PORT: ${MYSQL_PORT}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MARIADB_AUTO_UPGRADE: ${MARIADB_AUTO_UPGRADE}
+      DATABASE_URL: ${DATABASE_URL}
       SERVER_NAME: ${SERVER_NAME:-localhost}
       TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|php$$
       TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
-    image: pentiminax/tasksphere:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      target: frankenphp_prod
     volumes:
-      - caddy_data:/data
-      - caddy_config:/config
+      - ./:/app:Z
+      - ./frankenphp/Caddyfile:/etc/caddy/Caddyfile:roZ
+      - ./frankenphp/conf.d/app.dev.ini:/usr/local/etc/php/conf.d/app.dev.ini:roZ
+      - caddy_data:/data:Z
+      - caddy_config:/config:Z
+    extra_hosts:
+      - host.docker.internal:host-gateway
     ports:
       # HTTP
       - target: 80
-        published: "80"
+        published: 80
         protocol: tcp
       # HTTPS
       - target: 443
-        published: "443"
+        published: 443
         protocol: tcp
       # HTTP/3
       - target: 443
-        published: "443"
+        published: 443
         protocol: udp
 
 volumes:
