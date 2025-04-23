@@ -1,0 +1,7 @@
+[data-bs-theme=dark] .display-light {
+    display: none !important;
+}
+
+[data-bs-theme=light] .display-dark {
+    display: none !important;
+}

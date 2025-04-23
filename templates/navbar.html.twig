@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('project_list') }}">
+            <img class="display-dark" src="{{ asset('icons/logo-dark.svg') }}" height="30">
+            <img class="display-light" src="{{ asset('icons/logo-light.svg') }}" height="30">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Projects</a>
+                    <ul class="dropdown-menu">
+                        <li style="{{ app.user.selectedProject is null ? 'display: none;' : '' }}">
+                            <a class="dropdown-item" href="{{ app.user.selectedProject is null ? '' : path('project_show', { 'keyCode': app.user.selectedProject.keyCode }) }}"><i class="bi bi-arrow-up-right-square-fill"></i> {{ app.user.selectedProject }}</a>
+                        </li>
+                        <li style="{{ app.user.selectedProject is null ? 'display: none;' : '' }}"><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('project_list') }}"><i class="bi bi-grid-1x2-fill"></i> All projects</a></li>
+                        <li><a class="dropdown-item" data-bs-target="#modalCreateProject" data-bs-toggle="modal" href="#"><i class="bi bi-plus-circle-fill"></i> New project</a></li>
+                    </ul>
+                </li>
+                <li style="{{ app.user.selectedProject is null ? 'display: none;' : '' }}" class="nav-item">
+                    <a class="nav-link" data-bs-target="#modalCreateIssue" data-bs-toggle="modal" href="#"><i class="bi bi-ticket-perforated-fill"></i> Ticket</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i> {{ app.user }}</a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ path('user_show') }}"><i class="bi bi-file-person-fill"></i> Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-person-fill-lock"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

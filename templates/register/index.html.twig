@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Sign up</title>
+        <link rel="icon" href="{{ asset('icons/favicon.svg') }}" type="image/svg+xml">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ importmap('app') }}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container mt-5">
+            {{ form_start(form, { 'attr': {'class': 'row justify-content-center' } }) }}
+                <div class="col-md-6 col-sm-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h1 class="h3 mb-3 fw-bold text-center">Sign up</h1>
+
+                            <div class="form-floating mb-3">
+                                {{ form_widget(form.username) }}
+                                {{ form_label(form.username) }}
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                {{ form_widget(form.password.first) }}
+                                {{ form_label(form.password.first) }}
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                {{ form_widget(form.password.second) }}
+                                {{ form_label(form.password.second) }}
+                            </div>
+
+                            {{ form_widget(form.submit) }}
+
+                            <p class="my-3 text-muted">
+                                Already have an account ?
+                                <a class="text-decoration-none" href="{{ path('login_index') }}">Sign in</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<div {{ attributes }}>
+    <div class="card">
+        <div class="card-header"><i class="bi bi-ticket-perforated-fill"></i> {{ issue.keyCode }}</div>
+        <div class="card-body">
+            <div class="card-title">
+                {% if isEditingSummary %}
+                    <div class="input-group">
+                        <input arial-labe="Résumé" type="text" class="form-control" data-model="issue.summary" value="{{ issue.summary }}" autofocus>
+                        <button class="btn btn-outline-primary" data-action="live#action" data-live-action-param="saveSummary"><i class="bi bi-floppy2-fill"></i> Save</button>
+                    </div>
+                {% else %}
+                    <a class="h5 text-primary"><i class="bi bi-justify-left"></i> {{ issue.summary }}</a>
+                    </br>
+                    <button class="btn btn-sm btn-outline-primary mt-2" data-action="live#action" data-live-action-param="activateEditingSummary"><i class="bi bi-pencil-fill"></i> Edit summary</button>
+                {% endif %}
+            </div>
+
+            <p class="fw-bold card-text"><i class="bi bi-receipt-cutoff"></i> Description</p>
+
+            <hr>
+            {% if isEditingDescription %}
+                <textarea arial-label="Description" class="form-control mb-3" data-model="issue.description">{{ issue.description }}</textarea>
+                <button class="btn btn-sm btn-outline-primary" data-action="live#action" data-live-action-param="saveDescription"><i class="bi bi-floppy2-fill"></i> Save</button>
+            {% else %}
+                <p class="card-text">{{ issue.description }}</p>
+                {% if issue.description is empty %}
+                    <p class="text-muted">No description</p>
+                {% endif %}
+                <button class="btn btn-sm btn-outline-primary" data-action="live#action" data-live-action-param="activateEditingDescription"><i class="bi bi-pencil-fill"></i> Edit description</button>
+            {% endif %}
+
+            <p class="fw-bold card-text mt-2"><i class="bi bi-backpack-fill"></i> Attachments</p>
+
+            <hr>
+
+            <div class="input-group mb-3">
+                <input class="form-control" name="attachment" type="file">
+                <button class="btn btn-outline-primary" data-action="live#action" data-live-action-param="files(attachment)|addAttachment"><i class="bi bi-file-earmark-plus-fill"></i> Attach</button>
+            </div>
+            <div class="overflow-x-auto container-fluid" {{ (attachments is empty) ? 'style="display:none"' : '' }}>
+                <div class="flex-row flex-nowrap mb-3 row">
+                    {% for attachment in attachments %}
+                        <div class="col-sm-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <a href="{{ asset(attachment.path) }}" target="_blank" class="text-decoration-none">
+                                        <small><i class="bi bi-file-earmark-fill"></i> {{ attachment.originalName }}</small>
+                                    </a>
+                                    <button class="btn btn-sm btn-danger mt-2 w-100" data-action="live#action" data-live-action-param="deleteAttachment" data-live-attachment-id-param="{{ attachment.id }}"><i class="bi bi-trash2-fill"></i> Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>

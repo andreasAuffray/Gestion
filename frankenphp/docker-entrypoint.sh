@@ -1,6 +1,12 @@
 #!/bin/sh
 set -e
 
+echo "Waiting for DB..."
+until mariadb -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD --port=$MYSQL_PORT -e "USE $MYSQL_DATABASE"; do
+  echo "Database is not up yet. Waiting..."
+  sleep 5 # wait for 5 seconds before check again
+done
+
 if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then
 		composer install --prefer-dist --no-progress --no-interaction
